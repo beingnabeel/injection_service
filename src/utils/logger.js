@@ -9,13 +9,19 @@ const logDir = path.join(process.cwd(), 'logs');
 // Define custom log formats
 const customFormat = format.combine(
   format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  format.printf(info => `${info.timestamp} [${info.level.toUpperCase()}]: ${info.message}`)
+  format.printf(
+    (info) =>
+      `${info.timestamp} [${info.level.toUpperCase()}]: ${info.message}`,
+  ),
 );
 
 const colorizedFormat = format.combine(
   format.colorize(),
   format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  format.printf(info => `${info.timestamp} [${info.level.toUpperCase()}]: ${info.message}`)
+  format.printf(
+    (info) =>
+      `${info.timestamp} [${info.level.toUpperCase()}]: ${info.message}`,
+  ),
 );
 
 // Create file transports with daily rotation
@@ -24,14 +30,14 @@ const errorFileTransport = new transports.DailyRotateFile({
   datePattern: 'YYYY-MM-DD',
   maxSize: '20m',
   maxFiles: '14d',
-  level: 'error'
+  level: 'error',
 });
 
 const combinedFileTransport = new transports.DailyRotateFile({
   filename: path.join(logDir, 'combined-%DATE%.log'),
   datePattern: 'YYYY-MM-DD',
   maxSize: '20m',
-  maxFiles: '14d'
+  maxFiles: '14d',
 });
 
 const httpFileTransport = new transports.DailyRotateFile({
@@ -39,7 +45,7 @@ const httpFileTransport = new transports.DailyRotateFile({
   datePattern: 'YYYY-MM-DD',
   maxSize: '20m',
   maxFiles: '14d',
-  level: 'http'
+  level: 'http',
 });
 
 // Create Winston loggers
@@ -49,24 +55,22 @@ const logger = createLogger({
   transports: [
     new transports.Console({ format: colorizedFormat }),
     errorFileTransport,
-    combinedFileTransport
+    combinedFileTransport,
   ],
-  exitOnError: false
+  exitOnError: false,
 });
 
 const httpLogger = createLogger({
   level: 'http',
   format: customFormat,
-  transports: [
-    httpFileTransport
-  ],
-  exitOnError: false
+  transports: [httpFileTransport],
+  exitOnError: false,
 });
 
 // Export different logger functions for different purposes
 exports.requestLogger = (req, res, next) => {
   httpLogger.http(
-    `${req.method} ${req.originalUrl} - ${req.ip} - ${req.headers['user-agent']}`
+    `${req.method} ${req.originalUrl} - ${req.ip} - ${req.headers['user-agent']}`,
   );
   next();
 };

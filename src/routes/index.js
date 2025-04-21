@@ -13,25 +13,25 @@ router.use('/api/v1/types', typeRoutes);
 router.post(
   '/api/v1/write',
   validationMiddleware.validateWriteRequest,
-  writeController.createItem
+  writeController.createItem,
 );
 
 router.patch(
   '/api/v1/write',
   validationMiddleware.validateUpdateRequest,
-  writeController.updateItem
+  writeController.updateItem,
 );
 
 router.delete(
   '/api/v1/write',
   validationMiddleware.validateDeleteRequest,
-  writeController.deleteItem
+  writeController.deleteItem,
 );
 
 router.post(
   '/api/v1/write/bulk',
   validationMiddleware.validateBulkWriteRequest,
-  writeController.bulkCreate
+  writeController.bulkCreate,
 );
 
 module.exports = router;

@@ -4,11 +4,17 @@ const AppError = require('../utils/appError');
 const handlePrismaError = (err) => {
   if (err.code === 'P2002') {
     // Handle unique constraint violations
-    return new AppError(`Duplicate field value: ${err.meta?.target?.join(', ')}. Please use another value!`, 400);
+    return new AppError(
+      `Duplicate field value: ${err.meta?.target?.join(', ')}. Please use another value!`,
+      400,
+    );
   }
   if (err.code === 'P2003') {
     // Handle foreign key constraint violations
-    return new AppError(`Related record not found. ${err.meta?.field_name}`, 400);
+    return new AppError(
+      `Related record not found. ${err.meta?.field_name}`,
+      400,
+    );
   }
   if (err.code === 'P2025') {
     // Handle record not found
@@ -18,8 +24,10 @@ const handlePrismaError = (err) => {
 };
 
 // Handle JWT errors
-const handleJWTError = () => new AppError('Invalid token. Please log in again!', 401);
-const handleJWTExpiredError = () => new AppError('Your token has expired! Please log in again.', 401);
+const handleJWTError = () =>
+  new AppError('Invalid token. Please log in again!', 401);
+const handleJWTExpiredError = () =>
+  new AppError('Your token has expired! Please log in again.', 401);
 
 // Send error response in development environment
 const sendErrorDev = (err, res) => {
@@ -27,7 +35,7 @@ const sendErrorDev = (err, res) => {
     status: err.status,
     error: err,
     message: err.message,
-    stack: err.stack
+    stack: err.stack,
   });
 };
 
@@ -37,14 +45,14 @@ const sendErrorProd = (err, res) => {
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
-      message: err.message
+      message: err.message,
     });
   } else {
     // Programming or other unknown error: don't leak error details
     console.error('ERROR 💥', err);
     res.status(500).json({
       status: 'error',
-      message: 'Something went wrong!'
+      message: 'Something went wrong!',
     });
   }
 };
@@ -61,7 +69,8 @@ module.exports = (err, req, res, next) => {
     error.message = err.message;
 
     // Handle different types of errors
-    if (err.name === 'PrismaClientKnownRequestError') error = handlePrismaError(err);
+    if (err.name === 'PrismaClientKnownRequestError')
+      error = handlePrismaError(err);
     if (err.name === 'JsonWebTokenError') error = handleJWTError();
     if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
 

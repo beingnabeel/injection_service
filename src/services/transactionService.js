@@ -23,16 +23,16 @@ exports.executeTransaction = async (callback) => {
 exports.executeOperations = async (operations) => {
   return await prisma.$transaction(async (tx) => {
     const results = [];
-    
+
     for (const op of operations) {
       const { model, action, data, where = {} } = op;
-      
+
       if (!prisma[model]) {
         throw new Error(`Invalid model: ${model}`);
       }
-      
+
       let result;
-      
+
       switch (action) {
         case 'create':
           result = await tx[model].create({ data });
@@ -49,10 +49,10 @@ exports.executeOperations = async (operations) => {
         default:
           throw new Error(`Invalid action: ${action}`);
       }
-      
+
       results.push(result);
     }
-    
+
     return results;
   });
 };

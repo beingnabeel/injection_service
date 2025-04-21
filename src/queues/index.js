@@ -7,7 +7,7 @@ const rabbitMQ_URI = process.env.RABBITMQ_URI || 'amqp://localhost';
 // Queue names for different operations
 const QUEUES = {
   WRITE_OPERATIONS: 'write_operations',
-  BULK_OPERATIONS: 'bulk_operations'
+  BULK_OPERATIONS: 'bulk_operations',
 };
 
 // Initialize connection and channel
@@ -21,22 +21,24 @@ async function initializeRabbitMQ() {
   try {
     connection = await amqp.connect(rabbitMQ_URI);
     channel = await connection.createChannel();
-    
+
     // Assert queues to ensure they exist
     await channel.assertQueue(QUEUES.WRITE_OPERATIONS, { durable: true });
     await channel.assertQueue(QUEUES.BULK_OPERATIONS, { durable: true });
-    
+
     // Configure prefetch to not overwhelm the worker
     await channel.prefetch(1);
-    
+
     logger.info('RabbitMQ connection established successfully');
-    
+
     // Handle connection closure
     connection.on('close', () => {
-      logger.error('RabbitMQ connection closed unexpectedly, attempting to reconnect...');
+      logger.error(
+        'RabbitMQ connection closed unexpectedly, attempting to reconnect...',
+      );
       setTimeout(initializeRabbitMQ, 5000);
     });
-    
+
     return { connection, channel };
   } catch (error) {
     logger.error(`Error connecting to RabbitMQ: ${error.message}`);
@@ -84,5 +86,5 @@ module.exports = {
   initializeRabbitMQ,
   getChannel,
   closeConnection,
-  QUEUES
+  QUEUES,
 };

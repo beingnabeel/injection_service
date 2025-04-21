@@ -1,6 +1,6 @@
-const { prisma } = require("../models");
-const AppError = require("../utils/appError");
-const transactionService = require("./transactionService");
+const { prisma } = require('../models');
+const AppError = require('../utils/appError');
+const transactionService = require('./transactionService');
 
 // Create a single service type
 exports.createType = async (data) => {
@@ -15,7 +15,7 @@ exports.createType = async (data) => {
     data.warningThreshold = parseInt(data.warningThreshold, 10);
   }
   if (data.isPopular) {
-    data.isPopular = data.isPopular === "true" || data.isPopular === true;
+    data.isPopular = data.isPopular === 'true' || data.isPopular === true;
   }
   return await prisma.serviceType.create({
     data,
@@ -24,6 +24,18 @@ exports.createType = async (data) => {
 
 // Update a service type by ID
 exports.updateType = async (id, data) => {
+  if (data.displayOrder) {
+    data.displayOrder = parseInt(data.displayOrder, 10);
+  }
+  if (data.estimatedDuration) {
+    data.estimatedDuration = parseInt(data.estimatedDuration, 10);
+  }
+  if (data.warningThreshold) {
+    data.warningThreshold = parseInt(data.warningThreshold, 10);
+  }
+  if (data.isPopular) {
+    data.isPopular = data.isPopular === 'true' || data.isPopular === true;
+  }
   const type = await prisma.serviceType.findUnique({
     where: { serviceTypeId: id },
   });

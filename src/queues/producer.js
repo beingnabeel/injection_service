@@ -12,18 +12,20 @@ async function publishToQueue(queue, message, options = {}) {
   try {
     const channel = await getChannel();
     const messageBuffer = Buffer.from(JSON.stringify(message));
-    
+
     const publishOptions = {
-      persistent: true,  // Message will survive broker restarts
-      ...options
+      persistent: true, // Message will survive broker restarts
+      ...options,
     };
-    
+
     const result = channel.sendToQueue(queue, messageBuffer, publishOptions);
     logger.debug(`Message published to queue: ${queue}`);
-    
+
     return result;
   } catch (error) {
-    logger.error(`Error publishing message to queue ${queue}: ${error.message}`);
+    logger.error(
+      `Error publishing message to queue ${queue}: ${error.message}`,
+    );
     throw error;
   }
 }
@@ -37,7 +39,7 @@ exports.publishWriteOperation = async (data) => {
   return await publishToQueue(QUEUES.WRITE_OPERATIONS, {
     timestamp: Date.now(),
     operation: 'write',
-    data
+    data,
   });
 };
 
@@ -50,6 +52,6 @@ exports.publishBulkOperation = async (data) => {
   return await publishToQueue(QUEUES.BULK_OPERATIONS, {
     timestamp: Date.now(),
     operation: 'bulk',
-    data
+    data,
   });
 };

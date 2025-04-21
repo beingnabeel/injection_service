@@ -6,7 +6,7 @@ const AppError = require('../utils/appError');
  */
 exports.logRequest = (req, res, next) => {
   logger.info(
-    `${req.method} ${req.originalUrl} - ${req.ip} - ${req.headers['user-agent']}`
+    `${req.method} ${req.originalUrl} - ${req.ip} - ${req.headers['user-agent']}`,
   );
   next();
 };
@@ -19,7 +19,7 @@ exports.logPerformance = (req, res, next) => {
   res.on('finish', () => {
     const duration = Date.now() - start;
     logger.debug(
-      `${req.method} ${req.originalUrl} - ${res.statusCode} - ${duration}ms`
+      `${req.method} ${req.originalUrl} - ${res.statusCode} - ${duration}ms`,
     );
   });
   next();
@@ -30,7 +30,7 @@ exports.logPerformance = (req, res, next) => {
  */
 exports.logError = (err, req, res, next) => {
   logger.error(
-    `${err.name}: ${err.message} - ${req.method} ${req.originalUrl} - ${req.ip}`
+    `${err.name}: ${err.message} - ${req.method} ${req.originalUrl} - ${req.ip}`,
   );
   logger.error(err.stack);
   next(err);

@@ -5,11 +5,16 @@
  * @param {string} message - Success message
  * @param {*} data - Response data
  */
-exports.sendSuccess = (res, statusCode = 200, message = 'Success', data = {}) => {
+exports.sendSuccess = (
+  res,
+  statusCode = 200,
+  message = 'Success',
+  data = {},
+) => {
   res.status(statusCode).json({
     status: 'success',
     message,
-    data
+    data,
   });
 };
 
@@ -22,7 +27,7 @@ exports.sendSuccess = (res, statusCode = 200, message = 'Success', data = {}) =>
 exports.sendError = (res, statusCode = 500, message = 'Server Error') => {
   res.status(statusCode).json({
     status: 'error',
-    message
+    message,
   });
 };
 
@@ -32,7 +37,11 @@ exports.sendError = (res, statusCode = 500, message = 'Server Error') => {
  * @param {string} message - Success message
  * @param {*} data - Created resource data
  */
-exports.sendCreated = (res, message = 'Resource created successfully', data = {}) => {
+exports.sendCreated = (
+  res,
+  message = 'Resource created successfully',
+  data = {},
+) => {
   exports.sendSuccess(res, 201, message, data);
 };
 

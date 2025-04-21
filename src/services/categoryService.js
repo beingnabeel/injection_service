@@ -8,9 +8,9 @@ exports.createCategory = async (data) => {
   if (data.displayOrder) {
     data.displayOrder = parseInt(data.displayOrder, 10);
   }
-  
+
   return await prisma.serviceCategory.create({
-    data
+    data,
   });
 };
 
@@ -22,31 +22,31 @@ exports.updateCategory = async (id, data) => {
   }
 
   const category = await prisma.serviceCategory.findUnique({
-    where: { serviceCategoryId: id }
+    where: { serviceCategoryId: id },
   });
-  
+
   if (!category) {
     throw new AppError(`No category found with ID: ${id}`, 404);
   }
-  
+
   return await prisma.serviceCategory.update({
     where: { serviceCategoryId: id },
-    data
+    data,
   });
 };
 
 // Delete a category by ID
 exports.deleteCategory = async (id) => {
   const category = await prisma.serviceCategory.findUnique({
-    where: { serviceCategoryId: id }
+    where: { serviceCategoryId: id },
   });
-  
+
   if (!category) {
     throw new AppError(`No category found with ID: ${id}`, 404);
   }
-  
+
   return await prisma.serviceCategory.delete({
-    where: { serviceCategoryId: id }
+    where: { serviceCategoryId: id },
   });
 };
 
@@ -55,9 +55,9 @@ exports.bulkCreateCategories = async (categoriesData) => {
   return await transactionService.executeTransaction(async (tx) => {
     const result = await tx.serviceCategory.createMany({
       data: categoriesData,
-      skipDuplicates: true
+      skipDuplicates: true,
     });
-    
+
     return result;
   });
 };
