@@ -76,3 +76,134 @@ exports.bulkCreateTypes = async (typesData) => {
     return result;
   });
 };
+
+// Associate a component with a service type
+exports.associateComponentWithType = async (serviceTypeId, data) => {
+  // Check if the service type exists
+  const serviceType = await prisma.serviceType.findUnique({
+    where: { serviceTypeId },
+  });
+
+  if (!serviceType) {
+    throw new AppError(`No service type found with ID: ${serviceTypeId}`, 404);
+  }
+
+  // Check if the service component exists
+  const serviceComponent = await prisma.serviceComponent.findUnique({
+    where: { serviceComponentId: data.serviceComponentId },
+  });
+
+  if (!serviceComponent) {
+    throw new AppError(
+      `No service component found with ID: ${data.serviceComponentId}`,
+      404,
+    );
+  }
+
+  // Check if the association already exists
+  const existingAssociation = await prisma.serviceTypeComponent.findUnique({
+    where: {
+      serviceTypeId_serviceComponentId: {
+        serviceTypeId,
+        serviceComponentId: data.serviceComponentId,
+      },
+    },
+  });
+
+  if (existingAssociation) {
+    // Update the existing association
+    return await prisma.serviceTypeComponent.update({
+      where: {
+        serviceTypeComponent_id: existingAssociation.serviceTypeComponentId,
+      },
+      data: {
+        isDefault:
+          data.isDefault !== undefined
+            ? data.isDefault
+            : existingAssociation.isDefault,
+        isRequired:
+          data.isRequired !== undefined
+            ? data.isRequired
+            : existingAssociation.isRequired,
+        additionalPrice:
+          data.additionalPrice !== undefined
+            ? data.additionalPrice
+            : existingAssociation.additionalPrice,
+      },
+    });
+  }
+
+  // Create a new association
+  return await prisma.serviceTypeComponent.create({
+    data: {
+      serviceTypeId,
+      serviceComponentId: data.serviceComponentId,
+      isDefault: data.isDefault !== undefined ? data.isDefault : true,
+      isRequired: data.isRequired !== undefined ? data.isRequired : false,
+      additionalPrice: data.additionalPrice,
+    },
+  });
+};
+
+// // Get all components associated with a service type
+exports.getComponentsByTypeId = async (serviceTypeId) => {
+  // Check if the service type exists
+  const serviceType = await prisma.serviceType.findUnique({
+    where: { serviceTypeId },
+  });
+
+  if (!serviceType) {
+    throw new AppError(`No service type found with ID: ${serviceTypeId}`, 404);
+  }
+
+  // Get all the component associations
+  const typeComponents = await prisma.serviceTypeComponent.findMany({
+    where: { serviceTypeId },
+    include: {
+      serviceComponent: true,
+    },
+  });
+
+  return typeComponents;
+};
+
+// Remove a component from a service type
+exports.removeComponentFromType = async (serviceTypeId, serviceComponentId) => {
+  // Check if the service type exists
+  const serviceType = await prisma.serviceType.findUnique({
+    where: { serviceTypeId },
+  });
+
+  if (!serviceType) {
+    throw new AppError(`No service type found with ID: ${serviceTypeId}`, 404);
+  }
+
+  // Check if the component association exists
+  const typeComponent = await prisma.serviceTypeComponent.findUnique({
+    where: {
+      serviceTypeId_serviceComponentId: {
+        serviceTypeId,
+        serviceComponentId,
+      },
+    },
+  });
+
+  if (!typeComponent) {
+    throw new AppError(
+      `Component with ID ${serviceComponentId} is not associated with service type ${serviceTypeId}`,
+      404,
+    );
+  }
+
+  // Delete the association
+  await prisma.serviceTypeComponent.delete({
+    where: {
+      serviceTypeId_serviceComponentId: {
+        serviceTypeId,
+        serviceComponentId,
+      },
+    },
+  });
+
+  return true; // Success indication
+};

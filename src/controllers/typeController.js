@@ -63,3 +63,60 @@ exports.bulkCreateTypes = catchAsync(async (req, res, next) => {
     count: result.count,
   });
 });
+
+// Associate a component with a service type
+exports.associateComponentWithType = catchAsync(async (req, res, next) => {
+  const { serviceTypeId } = req.params;
+
+  if (!serviceTypeId) {
+    return next(new AppError('Service Type ID is required', 400));
+  }
+
+  const typeComponent = await typeService.associateComponentWithType(
+    serviceTypeId,
+    req.body,
+  );
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      typeComponent,
+    },
+  });
+});
+
+// Get all components associated with a service type
+exports.getComponentsByTypeId = catchAsync(async (req, res, next) => {
+  const { serviceTypeId } = req.params;
+
+  if (!serviceTypeId) {
+    return next(new AppError('Service Type ID is required', 400));
+  }
+
+  const components = await typeService.getComponentsByTypeId(serviceTypeId);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      components,
+    },
+  });
+});
+
+// Remove a component from a service type
+exports.removeComponentFromType = catchAsync(async (req, res, next) => {
+  const { serviceTypeId, serviceComponentId } = req.params;
+
+  if (!serviceTypeId) {
+    return next(new AppError('Service Type ID is required', 400));
+  }
+
+  if (!serviceComponentId) {
+    return next(new AppError('Service Component ID is required', 400));
+  }
+
+  await typeService.removeComponentFromType(serviceTypeId, serviceComponentId);
+
+  // Return 204 No Content for successful deletion
+  res.status(204).send();
+});

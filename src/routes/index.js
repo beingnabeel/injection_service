@@ -4,10 +4,14 @@ const categoryRoutes = require('./categoryRoutes');
 const typeRoutes = require('./typeRoutes');
 const writeController = require('../controllers/writeController');
 const validationMiddleware = require('../middlewares/validationMiddleware');
+const componentRoutes = require('./componentRoutes');
+const serviceCenterRoutes = require('./serviceCenterRoutes');
 
 // Mount specific entity routes
 router.use('/api/v1/categories', categoryRoutes);
 router.use('/api/v1/types', typeRoutes);
+router.use('/api/v1/components', componentRoutes);
+router.use('/api/v1/service-centers', serviceCenterRoutes);
 
 // Generic write operation routes
 router.post(
