@@ -216,6 +216,11 @@ exports.validateComponent = [
     .withMessage('Name is required')
     .isLength({ min: 2, max: 255 })
     .withMessage('Name must be between 2 and 255 characters'),
+  body('cost')
+    .notEmpty()
+    .withMessage('Cost is required')
+    .isFloat({ min: 0 })
+    .withMessage('Cost must be a non-negative decimal'),
   body('description')
     .optional()
     .trim()
@@ -238,6 +243,10 @@ exports.validateComponentUpdate = [
     .optional()
     .isLength({ min: 2, max: 255 })
     .withMessage('Name must be between 2 and 255 characters'),
+  body('cost')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Cost must be a non-negative decimal'),
   body('description')
     .optional()
     .trim()
@@ -261,20 +270,20 @@ exports.validateTypeComponent = [
     .isUUID()
     .withMessage('Service component ID must be a valid UUID'),
 
-  body('isDefault')
-    .optional()
-    .isBoolean()
-    .withMessage('isDefault must be a boolean value'),
+  // body('isDefault')
+  //   .optional()
+  //   .isBoolean()
+  //   .withMessage('isDefault must be a boolean value'),
 
-  body('isRequired')
-    .optional()
-    .isBoolean()
-    .withMessage('isRequired must be a boolean value'),
+  // body('isRequired')
+  //   .optional()
+  //   .isBoolean()
+  //   .withMessage('isRequired must be a boolean value'),
 
-  body('additionalPrice')
-    .optional()
-    .isFloat({ min: 0 })
-    .withMessage('Additional price must be a non-negative number'),
+  // body('additionalPrice')
+  //   .optional()
+  //   .isFloat({ min: 0 })
+  //   .withMessage('Additional price must be a non-negative number'),
   checkValidationErrors,
 ];
 
@@ -295,8 +304,7 @@ exports.validateServiceCenterOffering = [
 
   // Price validation
   body('basePrice')
-    .notEmpty()
-    .withMessage('Base price is required')
+    .optional()
     .isFloat({ min: 0 })
     .withMessage('Base price must be a non-negative number'),
 
@@ -306,10 +314,10 @@ exports.validateServiceCenterOffering = [
     .isFloat({ min: 0, max: 100 })
     .withMessage('Discount percentage must be between 0 and 100'),
 
-  body('discountAbsolute')
-    .optional()
-    .isFloat({ min: 0 })
-    .withMessage('Absolute discount must be a non-negative number'),
+  // body('discountAbsolute')
+  //   .optional()
+  //   .isFloat({ min: 0 })
+  //   .withMessage('Absolute discount must be a non-negative number'),
 
   body('discountValidUntil')
     .optional()
@@ -393,15 +401,15 @@ exports.validateServiceCenterOffering = [
     .isBoolean()
     .withMessage('isHighlighted must be a boolean'),
 
-  body('hasPickupDropService')
-    .optional()
-    .isBoolean()
-    .withMessage('hasPickupDropService must be a boolean'),
+  // body('hasPickupDropService')
+  //   .optional()
+  //   .isBoolean()
+  //   .withMessage('hasPickupDropService must be a boolean'),
 
-  body('pickupDropFee')
-    .optional()
-    .isFloat({ min: 0 })
-    .withMessage('Pickup/drop fee must be a non-negative number'),
+  // body('pickupDropFee')
+  //   .optional()
+  //   .isFloat({ min: 0 })
+  //   .withMessage('Pickup/drop fee must be a non-negative number'),
 
   body('hasEmergencyService')
     .optional()
@@ -439,10 +447,10 @@ exports.validateUpdateServiceCenterOffering = [
     .isFloat({ min: 0, max: 100 })
     .withMessage('Discount percentage must be between 0 and 100'),
 
-  body('discountAbsolute')
-    .optional()
-    .isFloat({ min: 0 })
-    .withMessage('Absolute discount must be a non-negative number'),
+  // body('discountAbsolute')
+  //   .optional()
+  //   .isFloat({ min: 0 })
+  //   .withMessage('Absolute discount must be a non-negative number'),
 
   body('discountValidUntil')
     .optional()
@@ -526,15 +534,15 @@ exports.validateUpdateServiceCenterOffering = [
     .isBoolean()
     .withMessage('isHighlighted must be a boolean'),
 
-  body('hasPickupDropService')
-    .optional()
-    .isBoolean()
-    .withMessage('hasPickupDropService must be a boolean'),
+  // body('hasPickupDropService')
+  //   .optional()
+  //   .isBoolean()
+  //   .withMessage('hasPickupDropService must be a boolean'),
 
-  body('pickupDropFee')
-    .optional()
-    .isFloat({ min: 0 })
-    .withMessage('Pickup/drop fee must be a non-negative number'),
+  // body('pickupDropFee')
+  //   .optional()
+  //   .isFloat({ min: 0 })
+  //   .withMessage('Pickup/drop fee must be a non-negative number'),
 
   body('hasEmergencyService')
     .optional()

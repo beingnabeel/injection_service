@@ -5,6 +5,9 @@ exports.createServiceComponent = async (data) => {
   if (data.estimatedDuration <= 0) {
     throw new AppError('Estimated duration must be a positive integer', 400);
   }
+  if (data.cost <= 0) {
+    throw new AppError('Cost must be a positive decimal', 400);
+  }
   if (data.vehicleType !== 'CAR' && data.vehicleType !== 'BIKE') {
     throw new AppError('Vehicle type must be one of: CAR, BIKE', 400);
   }
@@ -25,7 +28,11 @@ exports.updateServiceComponent = async (id, data) => {
     // Convert to integer
     data.estimatedDuration = parseInt(data.estimatedDuration, 10);
   }
-
+  if (data.cost !== undefined) {
+    if (data.cost <= 0) {
+      throw new AppError('Cost must be a positive decimal', 400);
+    }
+  }
   // Only validate vehicleType if it's included in the update
   if (
     data.vehicleType !== undefined &&

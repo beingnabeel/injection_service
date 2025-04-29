@@ -114,22 +114,22 @@ exports.associateComponentWithType = async (serviceTypeId, data) => {
     // Update the existing association
     return await prisma.serviceTypeComponent.update({
       where: {
-        serviceTypeComponent_id: existingAssociation.serviceTypeComponentId,
+        serviceTypeComponentId: existingAssociation.serviceTypeComponentId,
       },
-      data: {
-        isDefault:
-          data.isDefault !== undefined
-            ? data.isDefault
-            : existingAssociation.isDefault,
-        isRequired:
-          data.isRequired !== undefined
-            ? data.isRequired
-            : existingAssociation.isRequired,
-        additionalPrice:
-          data.additionalPrice !== undefined
-            ? data.additionalPrice
-            : existingAssociation.additionalPrice,
-      },
+      // data: {
+      //   isDefault:
+      //     data.isDefault !== undefined
+      //       ? data.isDefault
+      //       : existingAssociation.isDefault,
+      //   isRequired:
+      //     data.isRequired !== undefined
+      //       ? data.isRequired
+      //       : existingAssociation.isRequired,
+      //   additionalPrice:
+      //     data.additionalPrice !== undefined
+      //       ? data.additionalPrice
+      //       : existingAssociation.additionalPrice,
+      // },
     });
   }
 
@@ -138,9 +138,9 @@ exports.associateComponentWithType = async (serviceTypeId, data) => {
     data: {
       serviceTypeId,
       serviceComponentId: data.serviceComponentId,
-      isDefault: data.isDefault !== undefined ? data.isDefault : true,
-      isRequired: data.isRequired !== undefined ? data.isRequired : false,
-      additionalPrice: data.additionalPrice,
+      // isDefault: data.isDefault !== undefined ? data.isDefault : true,
+      // isRequired: data.isRequired !== undefined ? data.isRequired : false,
+      // additionalPrice: data.additionalPrice,
     },
   });
 };

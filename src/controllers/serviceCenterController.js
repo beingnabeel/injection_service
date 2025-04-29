@@ -20,6 +20,7 @@ exports.createServiceCenterOffering = catchAsync(async (req, res, next) => {
     await serviceCenterService.createServiceCenterOffering(
       serviceCenterId,
       offeringData,
+      req,
     );
 
   res.status(201).json({
