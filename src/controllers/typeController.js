@@ -48,22 +48,6 @@ exports.deleteType = catchAsync(async (req, res, next) => {
   });
 });
 
-// Create multiple service types in bulk
-exports.bulkCreateTypes = catchAsync(async (req, res, next) => {
-  if (!Array.isArray(req.body) || req.body.length === 0) {
-    return next(
-      new AppError('Request body must be an array of service types', 400),
-    );
-  }
-
-  const result = await typeService.bulkCreateTypes(req.body);
-
-  res.status(201).json({
-    status: 'success',
-    count: result.count,
-  });
-});
-
 // Associate a component with a service type
 exports.associateComponentWithType = catchAsync(async (req, res, next) => {
   const { serviceTypeId } = req.params;

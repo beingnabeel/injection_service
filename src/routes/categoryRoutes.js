@@ -20,11 +20,4 @@ router.patch(
 // Delete a category
 router.delete('/:id', categoryController.deleteCategory);
 
-// Bulk create categories
-router.post(
-  '/bulk',
-  validationMiddleware.validateBulkCategories,
-  categoryController.bulkCreateCategories,
-);
-
 module.exports = router;

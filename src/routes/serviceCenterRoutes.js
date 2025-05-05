@@ -20,4 +20,21 @@ router.patch(
   serviceCenterController.updateServiceCenterOffering,
 );
 
+// Create a new service center
+router.post(
+  '/',
+  validationMiddleware.validateServiceCenter,
+  serviceCenterController.createServiceCenter,
+);
+
+// Update a service center by id
+router.patch(
+  '/:id',
+  validationMiddleware.validateServiceCenterUpdate,
+  serviceCenterController.updateServiceCenter,
+);
+
+// Delete a service center by id
+router.delete('/:id', serviceCenterController.deleteServiceCenter);
+
 module.exports = router;

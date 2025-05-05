@@ -458,3 +458,61 @@ exports.updateServiceCenterOffering = async (
     );
   }
 };
+
+// Create service center
+exports.createServiceCenter = async (data) => {
+  // Check if service center with same name already exists
+
+  return await prisma.serviceCenter.create({
+    data,
+  });
+};
+
+// Update service center by ID
+exports.updateServiceCenter = async (id, data) => {
+  const serviceCenter = await prisma.serviceCenter.findUnique({
+    where: { id },
+  });
+
+  if (!serviceCenter) {
+    throw new AppError(`No service center found with ID: ${id}`, 404);
+  }
+
+  // If name is being updated, check if it's already in use by another service center
+  if (data.name && data.name !== serviceCenter.name) {
+    const existingServiceCenter = await prisma.serviceCenter.findFirst({
+      where: {
+        name: data.name,
+        id: { not: id },
+      },
+    });
+
+    if (existingServiceCenter) {
+      throw new AppError(
+        `A service center with name "${data.name}" already exists`,
+        400,
+      );
+    }
+  }
+
+  return await prisma.serviceCenter.update({
+    where: { id },
+    data,
+  });
+};
+
+// Delete service center by ID
+
+exports.deleteServiceCenter = async (id) => {
+  const serviceCenter = await prisma.serviceCenter.findUnique({
+    where: { id },
+  });
+
+  if (!serviceCenter) {
+    throw new AppError(`No service center found with ID: ${id}`, 404);
+  }
+
+  return await prisma.serviceCenter.delete({
+    where: { id },
+  });
+};

@@ -1,6 +1,5 @@
 const { prisma } = require('../models');
 const AppError = require('../utils/appError');
-const transactionService = require('./transactionService');
 
 // Create a single service type
 exports.createType = async (data) => {
@@ -65,17 +64,7 @@ exports.deleteType = async (id) => {
   });
 };
 
-// Create multiple service types in a transaction
-exports.bulkCreateTypes = async (typesData) => {
-  return await transactionService.executeTransaction(async (tx) => {
-    const result = await tx.serviceType.createMany({
-      data: typesData,
-      skipDuplicates: true,
-    });
 
-    return result;
-  });
-};
 
 // Associate a component with a service type
 exports.associateComponentWithType = async (serviceTypeId, data) => {

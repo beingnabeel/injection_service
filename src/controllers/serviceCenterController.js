@@ -59,3 +59,54 @@ exports.updateServiceCenterOffering = catchAsync(async (req, res, next) => {
     data: updatedOffering,
   });
 });
+
+// Create a new service center
+exports.createServiceCenter = catchAsync(async (req, res, next) => {
+  const serviceCenter = await serviceCenterService.createServiceCenter(
+    req.body,
+  );
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      serviceCenter,
+    },
+  });
+});
+
+// Update an existing service center
+exports.updateServiceCenter = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return next(new AppError('Service Center ID is required', 400));
+  }
+
+  const serviceCenter = await serviceCenterService.updateServiceCenter(
+    id,
+    req.body,
+  );
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      serviceCenter,
+    },
+  });
+});
+
+// Delete a service center
+exports.deleteServiceCenter = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return next(new AppError('Service Center ID is required', 400));
+  }
+
+  await serviceCenterService.deleteServiceCenter(id);
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});

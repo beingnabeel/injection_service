@@ -2,40 +2,26 @@ const express = require('express');
 const router = express.Router();
 const categoryRoutes = require('./categoryRoutes');
 const typeRoutes = require('./typeRoutes');
-const writeController = require('../controllers/writeController');
-const validationMiddleware = require('../middlewares/validationMiddleware');
+
 const componentRoutes = require('./componentRoutes');
 const serviceCenterRoutes = require('./serviceCenterRoutes');
-
+const serviceCenterAddressRoutes = require('./serviceCenterAddressRoute');
+const serviceCenterOperatingHourRoutes = require('./serviceCenterOperatingHourRoute');
+const serviceCenterSlotRoutes = require('./serviceCenterSlotRoute');
+const brandRoutes = require('./brandRoutes');
+const modelRoutes = require('./modelRoutes');
 // Mount specific entity routes
 router.use('/api/v1/categories', categoryRoutes);
 router.use('/api/v1/types', typeRoutes);
 router.use('/api/v1/components', componentRoutes);
 router.use('/api/v1/service-centers', serviceCenterRoutes);
-
-// Generic write operation routes
-router.post(
-  '/api/v1/write',
-  validationMiddleware.validateWriteRequest,
-  writeController.createItem,
+router.use('/api/v1/brands', brandRoutes);
+router.use('/api/v1/models', modelRoutes);
+router.use('/api/v1/service-center-addresses', serviceCenterAddressRoutes);
+router.use(
+  '/api/v1/service-center-operating-hours',
+  serviceCenterOperatingHourRoutes,
 );
-
-router.patch(
-  '/api/v1/write',
-  validationMiddleware.validateUpdateRequest,
-  writeController.updateItem,
-);
-
-router.delete(
-  '/api/v1/write',
-  validationMiddleware.validateDeleteRequest,
-  writeController.deleteItem,
-);
-
-router.post(
-  '/api/v1/write/bulk',
-  validationMiddleware.validateBulkWriteRequest,
-  writeController.bulkCreate,
-);
+router.use('/api/v1/service-center-slot', serviceCenterSlotRoutes);
 
 module.exports = router;

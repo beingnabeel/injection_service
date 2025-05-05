@@ -1,6 +1,5 @@
 const { prisma } = require('../models');
 const AppError = require('../utils/appError');
-const transactionService = require('./transactionService');
 
 // Create a single category
 exports.createCategory = async (data) => {
@@ -107,17 +106,5 @@ exports.deleteCategory = async (id) => {
 
   return await prisma.serviceCategory.delete({
     where: { serviceCategoryId: id },
-  });
-};
-
-// Create multiple categories in a transaction
-exports.bulkCreateCategories = async (categoriesData) => {
-  return await transactionService.executeTransaction(async (tx) => {
-    const result = await tx.serviceCategory.createMany({
-      data: categoriesData,
-      skipDuplicates: true,
-    });
-
-    return result;
   });
 };

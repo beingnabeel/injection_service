@@ -16,13 +16,6 @@ router.patch(
 // Delete a service type
 router.delete('/:id', typeController.deleteType);
 
-// Bulk create service types
-router.post(
-  '/bulk',
-  validationMiddleware.validateBulkTypes,
-  typeController.bulkCreateTypes,
-);
-
 // Associate a component with a service type
 router.post(
   '/:serviceTypeId/components',

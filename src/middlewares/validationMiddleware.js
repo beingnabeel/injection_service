@@ -42,17 +42,6 @@ exports.validateDeleteRequest = [
   checkValidationErrors,
 ];
 
-// Validate bulk write request
-exports.validateBulkWriteRequest = [
-  body('model').notEmpty().withMessage('Model name is required'),
-  body('data')
-    .notEmpty()
-    .withMessage('Data is required')
-    .isArray()
-    .withMessage('Data must be an array'),
-  checkValidationErrors,
-];
-
 // Validate category
 exports.validateCategory = [
   body('name')
@@ -104,21 +93,6 @@ exports.validateCategoryUpdate = [
     .optional()
     .isBoolean()
     .withMessage('isPopular must be a boolean value'),
-  checkValidationErrors,
-];
-
-// Validate bulk categories
-exports.validateBulkCategories = [
-  body().isArray().withMessage('Request body must be an array'),
-  body('*.name')
-    .notEmpty()
-    .withMessage('Category name is required')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Category name must be between 2 and 50 characters'),
-  body('*.description')
-    .optional()
-    .isLength({ max: 500 })
-    .withMessage('Description cannot exceed 500 characters'),
   checkValidationErrors,
 ];
 
@@ -186,25 +160,6 @@ exports.validateType = [
     .optional()
     .isBoolean()
     .withMessage('isPopular must be a boolean value'),
-  checkValidationErrors,
-];
-
-// Validate bulk service types
-exports.validateBulkTypes = [
-  body().isArray().withMessage('Request body must be an array'),
-  body('*.name')
-    .notEmpty()
-    .withMessage('Type name is required')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Type name must be between 2 and 50 characters'),
-  body('*.description')
-    .optional()
-    .isLength({ max: 500 })
-    .withMessage('Description cannot exceed 500 characters'),
-  body('*.categoryId')
-    .optional()
-    .isString()
-    .withMessage('Category ID must be a string'),
   checkValidationErrors,
 ];
 
@@ -554,5 +509,325 @@ exports.validateUpdateServiceCenterOffering = [
     .isFloat({ min: 0 })
     .withMessage('Emergency service fee must be a non-negative number'),
 
+  checkValidationErrors,
+];
+// Validate brand creation
+exports.validateBrand = [
+  body('name')
+    .notEmpty()
+    .withMessage('Brand name is required')
+    .isLength({ min: 2, max: 255 })
+    .withMessage('Brand name must be between 2 and 255 characters'),
+  body('vehicleType')
+    .notEmpty()
+    .withMessage('Vehicle type is required')
+    .isIn(['CAR', 'BIKE'])
+    .withMessage('Vehicle type must be one of: CAR, BIKE'),
+  body('logo')
+    .optional()
+    .isString()
+    .withMessage('Logo must be a valid URL string'),
+  body('description')
+    .optional()
+    .isString()
+    .withMessage('Description must be a string'),
+  body('website').optional().isURL().withMessage('Website must be a valid URL'),
+  checkValidationErrors,
+];
+// Validate brand update
+exports.validateBrandUpdate = [
+  body('name')
+    .optional()
+    .isLength({ min: 2, max: 255 })
+    .withMessage('Brand name must be between 2 and 255 characters'),
+  body('vehicleType')
+    .optional()
+    .isIn(['CAR', 'BIKE'])
+    .withMessage('Vehicle type must be one of: CAR, BIKE'),
+  body('logo')
+    .optional()
+    .isString()
+    .withMessage('Logo must be a valid URL string'),
+  body('description')
+    .optional()
+    .isString()
+    .withMessage('Description must be a string'),
+  body('website').optional().isURL().withMessage('Website must be a valid URL'),
+  checkValidationErrors,
+];
+// Validate model creation
+exports.validateModel = [
+  body('name')
+    .notEmpty()
+    .withMessage('Model name is required')
+    .isLength({ min: 2, max: 255 })
+    .withMessage('Model name must be between 2 and 255 characters'),
+  body('brandId').notEmpty().withMessage('Brand ID is required'),
+  body('vehicleType')
+    .notEmpty()
+    .withMessage('Vehicle type is required')
+    .isIn(['CAR', 'BIKE'])
+    .withMessage('Vehicle type must be one of: CAR, BIKE'),
+  body('isActive')
+    .optional()
+    .isBoolean()
+    .withMessage('isActive must be a boolean value'),
+  body('imageUrl')
+    .optional()
+    .isString()
+    .withMessage('Image URL must be a valid string'),
+  checkValidationErrors,
+];
+// Validate model update
+exports.validateModelUpdate = [
+  body('name')
+    .optional()
+    .isLength({ min: 2, max: 255 })
+    .withMessage('Model name must be between 2 and 255 characters'),
+  body('brandId').optional(),
+  body('vehicleType')
+    .optional()
+    .isIn(['CAR', 'BIKE'])
+    .withMessage('Vehicle type must be one of: CAR, BIKE'),
+  body('isActive')
+    .optional()
+    .isBoolean()
+    .withMessage('isActive must be a boolean value'),
+  body('imageUrl')
+    .optional()
+    .isString()
+    .withMessage('Image URL must be a valid string'),
+  checkValidationErrors,
+];
+// Validate service center creation
+exports.validateServiceCenter = [
+  body('name')
+    .notEmpty()
+    .withMessage('Service center name is required')
+    .isLength({ min: 2, max: 255 })
+    .withMessage('Service center name must be between 2 and 255 characters'),
+  body('brandId').notEmpty().withMessage('Brand ID is required'),
+  body('phone')
+    .notEmpty()
+    .withMessage('Phone number is required')
+    .isMobilePhone()
+    .withMessage('Invalid phone number format'),
+  body('alternatePhone')
+    .optional()
+    .isMobilePhone()
+    .withMessage('Invalid alternate phone number format'),
+  body('email').optional().isEmail().withMessage('Invalid email format'),
+  body('website').optional().isURL().withMessage('Website must be a valid URL'),
+  body('status')
+    .optional()
+    .isIn(['ACTIVE', 'INACTIVE', 'MAINTENANCE', 'CLOSED', 'COMING_SOON'])
+    .withMessage(
+      'Status must be one of: ACTIVE, INACTIVE, MAINTENANCE, CLOSED, COMING_SOON',
+    ),
+  body('capacity')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Capacity must be a positive integer'),
+  body('description')
+    .optional()
+    .isString()
+    .withMessage('Description must be a string'),
+  body('images').optional().isArray().withMessage('Images must be an array'),
+  body('images.*')
+    .optional()
+    .isString()
+    .withMessage('Each image must be a string URL'),
+  checkValidationErrors,
+];
+// Validate service center update
+exports.validateServiceCenterUpdate = [
+  body('name')
+    .optional()
+    .isLength({ min: 2, max: 255 })
+    .withMessage('Service center name must be between 2 and 255 characters'),
+  body('brandId').optional(),
+  body('phone')
+    .optional()
+    .isMobilePhone()
+    .withMessage('Invalid phone number format'),
+  body('alternatePhone')
+    .optional()
+    .isMobilePhone()
+    .withMessage('Invalid alternate phone number format'),
+  body('email').optional().isEmail().withMessage('Invalid email format'),
+  body('website').optional().isURL().withMessage('Website must be a valid URL'),
+  body('status')
+    .optional()
+    .isIn(['ACTIVE', 'INACTIVE', 'MAINTENANCE', 'CLOSED', 'COMING_SOON'])
+    .withMessage(
+      'Status must be one of: ACTIVE, INACTIVE, MAINTENANCE, CLOSED, COMING_SOON',
+    ),
+  body('rating')
+    .optional()
+    .isFloat({ min: 0, max: 5 })
+    .withMessage('Rating must be between 0 and 5'),
+  body('totalRatings')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Total ratings must be a non-negative integer'),
+  body('capacity')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Capacity must be a positive integer'),
+  body('description')
+    .optional()
+    .isString()
+    .withMessage('Description must be a string'),
+  body('images').optional().isArray().withMessage('Images must be an array'),
+  body('images.*')
+    .optional()
+    .isString()
+    .withMessage('Each image must be a string URL'),
+  checkValidationErrors,
+];
+// Validate address for service center
+exports.validateAddress = [
+  body('street')
+    .notEmpty()
+    .withMessage('Street is required')
+    .isString()
+    .withMessage('Street must be a string'),
+  body('city')
+    .notEmpty()
+    .withMessage('City is required')
+    .isString()
+    .withMessage('City must be a string'),
+  body('state')
+    .notEmpty()
+    .withMessage('State is required')
+    .isString()
+    .withMessage('State must be a string'),
+  body('country')
+    .notEmpty()
+    .withMessage('Country is required')
+    .isString()
+    .withMessage('Country must be a string'),
+  body('postalCode')
+    .notEmpty()
+    .withMessage('Postal code is required')
+    .isString()
+    .withMessage('Postal code must be a string'),
+  body('landmark')
+    .optional()
+    .isString()
+    .withMessage('Landmark must be a string'),
+  body('additionalInfo')
+    .optional()
+    .isString()
+    .withMessage('Additional info must be a string'),
+  body('longitude')
+    .notEmpty()
+    .withMessage('Longitude is required')
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Longitude must be between -180 and 180'),
+  body('latitude')
+    .notEmpty()
+    .withMessage('Latitude is required')
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must be between -90 and 90'),
+  body('isVerified')
+    .optional()
+    .isBoolean()
+    .withMessage('isVerified must be a boolean value'),
+  body('serviceCenterId')
+    .notEmpty()
+    .withMessage('Service center ID is required'),
+  checkValidationErrors,
+];
+
+// Validate operating hours for service center
+exports.validateOperatingHours = [
+  body('serviceCenterId')
+    .notEmpty()
+    .withMessage('Service center ID is required'),
+  body('openTime')
+    .notEmpty()
+    .withMessage('Open time is required')
+    .isISO8601()
+    .withMessage('Open time must be in ISO8601 format'),
+  body('closeTime')
+    .notEmpty()
+    .withMessage('Close time is required')
+    .isISO8601()
+    .withMessage('Close time must be in ISO8601 format')
+    .custom((value, { req }) => {
+      if (new Date(value) <= new Date(req.body.openTime)) {
+        throw new Error('Close time must be after open time');
+      }
+      return true;
+    }),
+  body('isClosed')
+    .optional()
+    .isBoolean()
+    .withMessage('isClosed must be a boolean value'),
+  body('isHoliday')
+    .optional()
+    .isBoolean()
+    .withMessage('isHoliday must be a boolean value'),
+
+  checkValidationErrors,
+];
+
+// Validate slot creation for service center
+exports.validateSlot = [
+  body('serviceCenterId')
+    .notEmpty()
+    .withMessage('Service center ID is required'),
+  body('startTime')
+    .notEmpty()
+    .withMessage('Start time is required')
+    .isISO8601()
+    .withMessage('Start time must be in ISO8601 format'),
+  body('endTime')
+    .notEmpty()
+    .withMessage('End time is required')
+    .isISO8601()
+    .withMessage('End time must be in ISO8601 format')
+    .custom((value, { req }) => {
+      if (new Date(value) <= new Date(req.body.startTime)) {
+        throw new Error('End time must be after start time');
+      }
+      return true;
+    }),
+  body('isAvailable')
+    .optional()
+    .isBoolean()
+    .withMessage('isAvailable must be a boolean value'),
+  body('slotCapacity')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Slot capacity must be a positive integer'),
+  body('bookedCapacity')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Booked capacity must be a non-negative integer')
+    .custom((value, { req }) => {
+      const slotCapacity = req.body.slotCapacity || 1;
+      if (value > slotCapacity) {
+        throw new Error('Booked capacity cannot exceed slot capacity');
+      }
+      return true;
+    }),
+  body('isBlocked')
+    .optional()
+    .isBoolean()
+    .withMessage('isBlocked must be a boolean value'),
+  body('blockReason')
+    .optional()
+    .isString()
+    .withMessage('Block reason must be a string'),
+  body('externalBookingIds')
+    .optional()
+    .isArray()
+    .withMessage('External booking IDs must be an array'),
+  body('externalBookingIds.*')
+    .optional()
+    .isString()
+    .withMessage('Each external booking ID must be a string'),
   checkValidationErrors,
 ];
